@@ -25,4 +25,5 @@ type Booking struct {
 	GuestsNumber  int    `json:"guests_number"`
 	IsBooking     bool   `json:"is_booking"`
 	Comment       string `json:"comment"`
+	Status        string `json:"status"`
 }
