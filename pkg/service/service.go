@@ -14,9 +14,15 @@ type Authorization interface {
 type Room interface {
 	Create(userId int, room hotelManager.Room) (int, error)
 	GetAll(userId int) ([]hotelManager.Room, error)
+	GetById(id, userId int) (hotelManager.Room, error)
+	Delete(id, userId int) error
+	Update(id, userId int, input hotelManager.UpdateRoomInput) error
 }
 
 type Booking interface {
+	Create(userId int, roomId int, booking hotelManager.Booking) (int, error)
+	GetAll(userId, roomId int) ([]hotelManager.Booking, error)
+	GetById(userId, bookingId int) (hotelManager.Booking, error)
 }
 
 type Service struct {
@@ -29,5 +35,6 @@ func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
 		Room:          NewRoomService(repos.Room),
+		Booking:       NewBookingService(repos.Booking, repos.Room),
 	}
 }

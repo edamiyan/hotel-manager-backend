@@ -38,7 +38,7 @@ CREATE TABLE users_rooms
 
 CREATE TABLE rooms_bookings
 (
-    id      serial                                         not null unique,
-    item_id int references bookings (id) on delete cascade not null,
-    list_id int references rooms (id) on delete cascade    not null
+    id         serial                                         not null unique,
+    booking_id int references bookings (id) on delete cascade not null,
+    room_id    int references rooms (id) on delete cascade    not null
 );
