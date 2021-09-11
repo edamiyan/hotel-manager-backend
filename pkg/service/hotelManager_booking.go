@@ -15,7 +15,7 @@ func NewBookingService(repo repository.Booking, roomRepo repository.Room) *Booki
 }
 
 func (s *BookingService) Create(userId, roomId int, booking hotelManager.Booking) (int, error) {
-	_, err := s.roomRepo.GetById(userId, roomId)
+	_, err := s.roomRepo.GetById(roomId, userId)
 	if err != nil {
 		return 0, err
 	}
@@ -23,7 +23,7 @@ func (s *BookingService) Create(userId, roomId int, booking hotelManager.Booking
 }
 
 func (s *BookingService) GetAll(userId, roomId int) ([]hotelManager.Booking, error) {
-	_, err := s.roomRepo.GetById(userId, roomId)
+	_, err := s.roomRepo.GetById(roomId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -32,4 +32,19 @@ func (s *BookingService) GetAll(userId, roomId int) ([]hotelManager.Booking, err
 
 func (s *BookingService) GetById(userId, bookingId int) (hotelManager.Booking, error) {
 	return s.repo.GetById(userId, bookingId)
+}
+
+func (s *BookingService) Update(userId, bookingId int, input hotelManager.UpdateBookingInput) error {
+	if err := input.Validate(); err != nil {
+		return err
+	}
+	return s.repo.Update(userId, bookingId, input)
+}
+
+func (s *BookingService) Delete(userId, bookingId int) error {
+	return s.repo.Delete(userId, bookingId)
+}
+
+func (s *BookingService) GetRoomIdByBooking(userId, bookingid int) (int, error) {
+	return s.repo.GetRoomIdByBooking(userId, bookingid)
 }

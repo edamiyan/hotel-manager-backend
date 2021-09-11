@@ -39,6 +39,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api", h.userIdentity)
 	{
+		booking := api.Group("/booking")
+		{
+			booking.GET("/:booking_id", h.getRoomIdByBooking)
+		}
+
 		rooms := api.Group("/rooms")
 		{
 			rooms.POST("/", h.createRoom)

@@ -2,6 +2,7 @@ package hotelManager
 
 import (
 	"context"
+	"github.com/spf13/viper"
 	"net/http"
 	"time"
 )
@@ -12,7 +13,7 @@ type Server struct {
 
 func (s *Server) Run(port string, handler http.Handler) error {
 	s.httpServer = &http.Server{
-		Addr:           "192.168.0.14:" + port,
+		Addr:           viper.GetString("URL") + ":" + port,
 		Handler:        handler,
 		MaxHeaderBytes: 1 << 20,
 		ReadTimeout:    10 * time.Second,

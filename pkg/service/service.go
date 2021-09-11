@@ -23,6 +23,9 @@ type Booking interface {
 	Create(userId int, roomId int, booking hotelManager.Booking) (int, error)
 	GetAll(userId, roomId int) ([]hotelManager.Booking, error)
 	GetById(userId, bookingId int) (hotelManager.Booking, error)
+	Update(userId, bookingId int, input hotelManager.UpdateBookingInput) error
+	Delete(userId, bookingId int) error
+	GetRoomIdByBooking(userId, bookingid int) (int, error)
 }
 
 type Service struct {

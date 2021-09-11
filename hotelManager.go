@@ -43,8 +43,27 @@ type UpdateRoomInput struct {
 	Price       *int    `json:"price"`
 }
 
+type UpdateBookingInput struct {
+	Name          *string `json:"name"`
+	Phone         *string `json:"phone"`
+	ArrivalDate   *string `json:"arrival_date"`
+	DepartureDate *string `json:"departure_date"`
+	GuestsNumber  *int    `json:"guests_number"`
+	IsBooking     *bool   `json:"is_booking"`
+	Comment       *string `json:"comment"`
+	Status        *int    `json:"status"`
+}
+
 func (i UpdateRoomInput) Validate() error {
 	if i.RoomNumber == nil && i.DoubleBed == nil && i.SingleBed == nil && i.Description == nil && i.Price == nil {
+		return errors.New("update structure has no values")
+	}
+
+	return nil
+}
+
+func (i UpdateBookingInput) Validate() error {
+	if i.Name == nil && i.Phone == nil && i.ArrivalDate == nil && i.DepartureDate == nil && i.GuestsNumber == nil && i.IsBooking == nil && i.Comment == nil && i.Status == nil {
 		return errors.New("update structure has no values")
 	}
 

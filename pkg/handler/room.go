@@ -113,7 +113,7 @@ func (h *Handler) deleteRoom(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Delete(id, userId)
+	err = h.services.Room.Delete(id, userId)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -122,5 +122,4 @@ func (h *Handler) deleteRoom(c *gin.Context) {
 	c.JSON(http.StatusOK, StatusResponse{
 		Status: "ok",
 	})
-
 }

@@ -57,8 +57,7 @@ func (r *RoomPostgres) GetAll(userId int) ([]hotelManager.Room, error) {
 
 func (r *RoomPostgres) GetById(id, userId int) (hotelManager.Room, error) {
 	var room hotelManager.Room
-	query := fmt.Sprintf("SELECT rt.id, rt.room_number, rt.double_bed, rt.single_bed, rt.description, rt.price"+
-		" FROM %s rt INNER JOIN %s ur ON rt.id = ur.room_id WHERE ur.user_id = $1 AND ur.room_id = $2", roomsTable, usersRoomsTable)
+	query := fmt.Sprintf("SELECT rt.id, rt.room_number, rt.double_bed, rt.single_bed, rt.description, rt.price FROM %s rt INNER JOIN %s ur ON rt.id = ur.room_id WHERE ur.user_id = $1 AND ur.room_id = $2", roomsTable, usersRoomsTable)
 	err := r.db.Get(&room, query, userId, id)
 
 	return room, err

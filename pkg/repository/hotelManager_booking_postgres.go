@@ -4,6 +4,8 @@ import (
 	"fmt"
 	hotelManager "github.com/edamiyan/hotel-manager"
 	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
+	"strings"
 )
 
 type BookingPostgres struct {
@@ -67,4 +69,85 @@ func (r *BookingPostgres) GetById(userId, bookingId int) (hotelManager.Booking, 
 	}
 
 	return bookings, nil
+}
+
+func (r *BookingPostgres) Update(userId, bookingId int, input hotelManager.UpdateBookingInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Name != nil {
+		setValues = append(setValues, fmt.Sprintf("name=$%d", argId))
+		args = append(args, *input.Name)
+		argId++
+	}
+
+	if input.Phone != nil {
+		setValues = append(setValues, fmt.Sprintf("phone=$%d", argId))
+		args = append(args, *input.Phone)
+		argId++
+	}
+
+	if input.ArrivalDate != nil {
+		setValues = append(setValues, fmt.Sprintf("arrival_date=$%d", argId))
+		args = append(args, *input.ArrivalDate)
+		argId++
+	}
+
+	if input.DepartureDate != nil {
+		setValues = append(setValues, fmt.Sprintf("departure_date=$%d", argId))
+		args = append(args, *input.DepartureDate)
+		argId++
+	}
+
+	if input.GuestsNumber != nil {
+		setValues = append(setValues, fmt.Sprintf("guests_number=$%d", argId))
+		args = append(args, *input.GuestsNumber)
+		argId++
+	}
+
+	if input.IsBooking != nil {
+		setValues = append(setValues, fmt.Sprintf("is_booking=$%d", argId))
+		args = append(args, *input.IsBooking)
+		argId++
+	}
+
+	if input.Comment != nil {
+		setValues = append(setValues, fmt.Sprintf("comment=$%d", argId))
+		args = append(args, *input.Comment)
+		argId++
+	}
+
+	if input.Status != nil {
+		setValues = append(setValues, fmt.Sprintf("status=$%d", argId))
+		args = append(args, *input.Status)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+	query := fmt.Sprintf("UPDATE %s bt SET %s FROM %s rb, %s ur WHERE bt.id = rb.booking_id AND rb.room_id = ur.room_id AND ur.user_id = $%d AND bt.id = $%d",
+		bookingsTable, setQuery, roomsBookingsTable, usersRoomsTable, argId, argId+1)
+	args = append(args, userId, bookingId)
+
+	logrus.Debugf("updateQuery: %s", query)
+	logrus.Debugf("args: %s", args)
+
+	_, err := r.db.Exec(query, args...)
+	return err
+}
+
+func (r *BookingPostgres) Delete(userId, bookingId int) error {
+	query := fmt.Sprintf(`DELETE FROM %s bt USING %s rb, %s ur WHERE bt.id = rb.booking_id AND rb.room_id = ur.room_id AND ur.user_id = $1 AND bt.id = $2`, bookingsTable, roomsBookingsTable, usersRoomsTable)
+	_, err := r.db.Exec(query, userId, bookingId)
+	return err
+}
+
+func (r *BookingPostgres) GetRoomIdByBooking(userId, bookingId int) (int, error) {
+	roomId := 0
+	query := fmt.Sprintf(`SELECT rb.room_id FROM %s rb INNER JOIN %s ur on rb.room_id = ur.room_id WHERE rb.booking_id = $1 AND ur.user_id = $2`, roomsBookingsTable, usersRoomsTable)
+	if err := r.db.Get(&roomId, query, bookingId, userId); err != nil {
+		return roomId, err
+	}
+
+	return roomId, nil
 }
