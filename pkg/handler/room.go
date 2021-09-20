@@ -106,7 +106,6 @@ func (h *Handler) deleteRoom(c *gin.Context) {
 	if err != nil {
 		return
 	}
-
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, "invalid id param")

@@ -48,3 +48,7 @@ func (s *BookingService) Delete(userId, bookingId int) error {
 func (s *BookingService) GetRoomIdByBooking(userId, bookingid int) (int, error) {
 	return s.repo.GetRoomIdByBooking(userId, bookingid)
 }
+
+func (s *BookingService) GetAllUserBookings(userId int) ([]hotelManager.BookingTimeline, error) {
+	return s.repo.GetAllUserBookings(userId)
+}

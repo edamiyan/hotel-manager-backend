@@ -151,3 +151,16 @@ func (r *BookingPostgres) GetRoomIdByBooking(userId, bookingId int) (int, error)
 
 	return roomId, nil
 }
+
+func (r *BookingPostgres) GetAllUserBookings(userId int) ([]hotelManager.BookingTimeline, error) {
+	var bookings []hotelManager.BookingTimeline
+
+	getAllBookingsQuery := fmt.Sprintf("	SELECT tb.id, tb.name, rb.room_id, tb.arrival_date, tb.departure_date, tb.is_booking, tb.status "+
+		"FROM %s tb INNER JOIN %s rb ON tb.id = rb.booking_id INNER JOIN %s ur ON rb.room_id = ur.room_id WHERE ur.user_id = $1", bookingsTable, roomsBookingsTable, usersRoomsTable)
+	if err := r.db.Select(&bookings, getAllBookingsQuery, userId); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return bookings, nil
+}

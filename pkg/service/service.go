@@ -26,6 +26,7 @@ type Booking interface {
 	Update(userId, bookingId int, input hotelManager.UpdateBookingInput) error
 	Delete(userId, bookingId int) error
 	GetRoomIdByBooking(userId, bookingid int) (int, error)
+	GetAllUserBookings(userId int) ([]hotelManager.BookingTimeline, error)
 }
 
 type Service struct {

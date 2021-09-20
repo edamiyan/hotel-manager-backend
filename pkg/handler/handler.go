@@ -41,6 +41,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		booking := api.Group("/booking")
 		{
+			booking.GET("/", h.getAllUserBookings)
 			booking.GET("/:booking_id", h.getRoomIdByBooking)
 		}
 

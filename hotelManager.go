@@ -23,6 +23,16 @@ type Booking struct {
 	Status        int    `json:"status" db:"status"`
 }
 
+type BookingTimeline struct {
+	Id            int    `json:"id"`
+	Name          string `json:"title" db:"name"`
+	Group         int    `json:"group" db:"room_id"`
+	ArrivalDate   string `json:"start_time" db:"arrival_date"`
+	DepartureDate string `json:"end_time" db:"departure_date"`
+	IsBooking     bool   `json:"is_booking" db:"is_booking"`
+	Status        int    `json:"status" db:"status"`
+}
+
 type UsersRoom struct {
 	Id     int `json:"id"`
 	UserId int `json:"user_id" db:"user_id"`

@@ -11,6 +11,11 @@ type getAllBookingsResponse struct {
 	Data []hotelManager.Booking `json:"data"`
 }
 
+type getAllUserBookingsResponse struct {
+	Data []hotelManager.BookingTimeline `json:"data"`
+}
+
+
 func (h *Handler) createBooking(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -155,5 +160,23 @@ func (h *Handler) getRoomIdByBooking(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"room_id": roomId,
+	})
+}
+
+func (h *Handler) getAllUserBookings(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		return
+	}
+
+
+	bookings, err := h.services.Booking.GetAllUserBookings(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, getAllUserBookingsResponse{
+		bookings,
 	})
 }
