@@ -14,13 +14,12 @@ db:
   SSLMode: "disable"
 
 ```
-## Установите и запустите БД и миграции
+## Создайте БД и примените миграции
 ```
 docker pull postgres
 docker run --name=<db_name> -e POSTGRES_PASSWORD='<your_password>' -p 5432:5432 -d postgres
 migrate create -ext sql -dir ./schema -seq init
 migrate -path ./schema -database 'postgres://postgres:<your_password>@localhost:5432/postgres?sslmode=disable' up
-migrate -path ./schema -database 'postgres://postgres:<your_password>@localhost:5432/postgres?sslmode=disable' down
 ```
 ## Скомпилируйте и запустите
 ```
